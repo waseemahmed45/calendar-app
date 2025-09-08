@@ -1,18 +1,18 @@
-# Use official Python image as base
-FROM python:3.11-slim
-
-# Set working directory
+# Stage 1: Build the Angular app
+FROM node:18 AS build
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Node dependencies
+COPY package*.json ./
+RUN npm install
 
-# Copy application code
+# Copy all source code and build
 COPY . .
+RUN npm run build --prod
 
-# Expose port for FastAPI
-EXPOSE 8000
+# Stage 2: Serve with Nginx
+FROM nginx:alpine
+COPY --from=build /app/dist/calendar-app /usr/share/nginx/html
 
-# Run FastAPI with Uvicorn
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
