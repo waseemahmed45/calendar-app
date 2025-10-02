@@ -4,7 +4,7 @@ import { CalendarDay } from '../utils/calendar-day';
 @Component({
   selector: 'app-calendars',
   templateUrl: './calendars.component.html',
-  styleUrls: ['./calendars.component.scss']
+  styleUrls: ['./calendars.component.scss', './calendars2.component.scss']
 })
 export class CalendarsComponent implements OnInit {
 
